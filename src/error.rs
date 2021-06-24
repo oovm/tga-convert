@@ -1,5 +1,5 @@
 use glob::{GlobError, PatternError};
-use png::DecodingError;
+use image::ImageError;
 use std::{io::ErrorKind, option::NoneError};
 use toml;
 
@@ -30,8 +30,8 @@ impl From<NoneError> for Error {
     }
 }
 
-impl From<DecodingError> for Error {
-    fn from(_: DecodingError) -> Self {
+impl From<ImageError> for Error {
+    fn from(_: ImageError) -> Self {
         Error::ParseFailed
     }
 }

@@ -1,42 +1,19 @@
-use crate::{Config, Error};
-use glob::GlobResult;
 // use png::{BitDepth, ColorType, OutputInfo};
-use std::{fs, fs::File, io::Write};
-use image::codecs::{png::PngDecoder,tga};
-use image::ImageDecoder;
+// use std::{fs, fs::File, io::Write};
 
-#[derive(Clone, Debug)]
-pub struct PNG {
-    pub path: Box<str>,
-    pub size: u64,
-    pub ratio: f32,
-}
+use glob::GlobResult;
+use image::{ ImageFormat};
+// use image::codecs::{png::PngDecoder, tga};
+use image::io::Reader;
 
-impl PNG {
-    pub fn new(path: &str) -> Self {
-        Self { path: Box::from(path), size: 0, ratio: -1.0 }
-    }
+use crate::{Config, Error};
 
-    pub fn size_ratio(&mut self) -> Result<(), Error> {
-        let (info, _) = png::Decoder::new(File::open(&*self.path)?).read_info()?;
-        self.size = fs::metadata(&*self.path)?.len();
-        self.ratio = *&self.size as f32 / estimate_size(&info);
-        return Ok(());
-    }
-}
-
-pub fn write_to_file(path: &str, bytes: &[u8]) -> Result<(), Error> {
-    println!("Generating {}", path);
-    let mut file = File::create(path)?;
-    file.write_all(bytes)?;
-    Ok(())
-}
-
-pub fn check_file(entry: GlobResult, cfg: &Config) -> Result<String, Error> {
-    let mut image = Vec::new();
+pub fn export_tga(entry: GlobResult, _cfg: &Config) -> Result<(), Error> {
     let path = &entry?.to_path_buf();
-    PngDecoder::new(File::open(path)?)?.read_image(&mut image)?;
-
-
-
+    let name = path.file_name()?.to_str()?;
+    let image = Reader::open(path)?.decode()?;
+    let out = path.parent()?.join(format!("{}.tga", name));
+    println!("{:?}",out);
+    image.save_with_format(out, ImageFormat::Tga)?;
+    Ok(())
 }

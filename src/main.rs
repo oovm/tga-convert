@@ -1,5 +1,6 @@
 #![feature(try_trait)]
 
+#[allow(unused_imports)]
 use std::{fs, fs::File, io::Write};
 
 use glob::glob;
@@ -9,7 +10,7 @@ use toml;
 pub use error::Error;
 
 #[allow(unused_imports)]
-use crate::utils::{check_file, estimate_size, PNG};
+use crate::utils::export_tga;
 
 mod error;
 pub mod utils;
@@ -29,16 +30,16 @@ impl Default for Config {
 
 fn main() -> Result<(), Error> {
     let mut cfg = Config::default();
-    if let Ok(file) = &fs::read("pngc.toml") {
+    if let Ok(file) = &fs::read("tga.toml") {
         if let Ok(o) = toml::from_slice(file) {
             cfg = o
         };
     }
-    let mut file = File::create("pngc.csv")?;
-    file.write_all("路径,大小(KB),异常等级\n".as_bytes())?;
+    // let mut file = File::create("pngc.csv")?;
+    // file.write_all("路径,大小(KB),异常等级\n".as_bytes())?;
     for entry in glob(&cfg.glob)? {
-        if let Ok(w) = check_file(entry, &cfg) {
-            file.write_all(w.as_bytes())?;
+        if let Ok(_w) = export_tga(entry, &cfg) {
+            // do nothing
         }
     }
     Ok(())
