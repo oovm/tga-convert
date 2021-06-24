@@ -1,0 +1,3 @@
+glob = "tests/**/*.png"
+min_size = 10_000_0
+min_ratio = 1

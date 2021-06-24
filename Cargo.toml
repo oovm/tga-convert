@@ -1,0 +1,24 @@
+[package]
+name = "tga-convert"
+version = "1.0.0"
+authors = ["Aster <192607617@qq.com>"]
+description = "Find abnormal png files"
+repository = "https://github.com/GalAster/png-cleaner"
+readme = "Readme.md"
+license = "MPL-2.0"
+edition = "2018"
+
+[[bin]]
+name = "tga-convert"
+path = "src/main.rs"
+
+[dependencies]
+glob = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+toml = "0.4"
+image = "0.23"
+
+[profile.release]
+opt-level = 'z'
+lto = true
+panic = 'abort'
