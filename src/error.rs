@@ -1,6 +1,6 @@
 use glob::{GlobError, PatternError};
-use png::DecodingError;
-use std::{io::ErrorKind, option::NoneError};
+use image::ImageError;
+use std::{io::ErrorKind};
 use toml;
 
 #[derive(Debug)]
@@ -24,14 +24,14 @@ impl From<std::io::Error> for Error {
     }
 }
 
-impl From<NoneError> for Error {
-    fn from(_: NoneError) -> Self {
-        Error::NullException
-    }
-}
+// impl From<NoneError> for Error {
+//     fn from(_: NoneError) -> Self {
+//         Error::NullException
+//     }
+// }
 
-impl From<DecodingError> for Error {
-    fn from(_: DecodingError) -> Self {
+impl From<ImageError> for Error {
+    fn from(_: ImageError) -> Self {
         Error::ParseFailed
     }
 }
